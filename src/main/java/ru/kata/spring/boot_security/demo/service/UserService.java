@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.model.UserDTO;
 
@@ -24,5 +23,4 @@ public interface UserService extends UserDetailsService {
 
     User findUserByEmail(String email);
 
-    PasswordEncoder getPasswordEncoder();
 }

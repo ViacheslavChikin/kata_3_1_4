@@ -13,7 +13,7 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UsersController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public String index(Principal principal, Model model) {

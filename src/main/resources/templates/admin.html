@@ -98,7 +98,7 @@
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <form id="formEdit" th:action="@{admin/update/{id} (id=${user.id})}"
-                                                          th:method="POST"
+                                                          th:method="PATCH"
                                                           th:object="${user}">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
@@ -163,7 +163,7 @@
                                                 <div class="modal-content">
                                                     <form id="formDelete"
                                                           th:action="@{admin/delete/{id} (id=${user.id})}"
-                                                          th:method="POST"
+                                                          th:method="DELETE"
                                                           th:object="${user}">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"

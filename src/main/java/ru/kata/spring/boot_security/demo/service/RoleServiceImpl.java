@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class RoleServiceImpl implements RoleService {
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
     public Role findByRoleName(String roleName) {

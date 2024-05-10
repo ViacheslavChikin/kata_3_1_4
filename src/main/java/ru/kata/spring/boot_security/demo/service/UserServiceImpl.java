@@ -1,26 +1,32 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.model.UserDTO;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+//@AllArgsConstructor
+public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private RoleService roleService;
+    private final UserRepository userRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, @Lazy PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public void addUser(UserDTO userDTO) throws Exception {
@@ -29,6 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new Exception("Not a unique username");
         } else {
             user = toUser(userDTO, new User());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
     }
@@ -41,6 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = toUser(userDTO, userRepository.findById(userDTO.getId()).get());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -70,14 +78,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getAuthorities());
     }
 
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     private User toUser(UserDTO userDTO, User user) {
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(this.getPasswordEncoder().encode(userDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRoles(userDTO.getRoles()
                 .stream()
                 .map(rolename -> roleService

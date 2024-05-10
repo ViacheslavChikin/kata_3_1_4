@@ -20,8 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class AdminsController {
 
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @GetMapping
     public String mainPage(Principal principal, Model model, Session session, HttpServletRequest request,
@@ -43,16 +43,14 @@ public class AdminsController {
         return "admin";
     }
 
-    @PostMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public String doUpdate(@ModelAttribute("user") UserDTO userDTO, Model model) {
-        List<String> rolesList = List.of("USER", "ADMIN");
-        model.addAttribute("roles", rolesList);
         userService.updateUser(userDTO);
         model.addAttribute(userDTO);
         return "redirect:/admin";
     }
 
-    @PostMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";

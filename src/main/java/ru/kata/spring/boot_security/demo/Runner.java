@@ -15,8 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Runner implements CommandLineRunner {
 
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Override
     public void run(String... args) {

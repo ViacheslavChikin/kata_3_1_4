@@ -10,7 +10,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @AllArgsConstructor
 public class LoginController {
 
-    UserService userService;
+    private final UserService userService;
 
     @GetMapping(value = "/")
     public String login(@RequestParam(value = "error", required = false) String error,
